@@ -1,0 +1,37 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/iron-jsonp-library/iron-jsonp-library.html">
+<dom-module id="map-element">
+    <template>
+        <iron-jsonp-library library-url="https://maps.googleapis.com/maps/api/js?callback=%%callback%%" notify-event="api-load" library-loaded="{{loaded}}"></iron-jsonp-library>
+        <style>
+        #map {
+            height: 100%;
+        }
+        </style>
+        <div id="map"></div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: "map-element",
+    properties: {
+        location: {
+            type: Object
+        }
+    },
+    listeners: {
+        'api-load': 'initMap',
+    },
+    ready: function() {
+    },
+    initMap: function() {
+        var options = {
+            zoom: 17,
+            center: new google.maps.LatLng(this.location)
+        };
+        var map = new google.maps.Map(
+            document.getElementById('map'),
+            options);
+    }
+});
+</script>
