@@ -4,6 +4,7 @@
 <head>
     <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="map_components.html">
+    <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
     <style>
     html,
     body {
@@ -15,7 +16,10 @@
 </head>
 
 <body>
-    <map-element location='{ "lat": 35.41, "lng": 139.41}'></map-element>
+    <div class="layout horizontal">
+    <map-element location='{ "lat": 35.41, "lng": 139.41}'><h2>Behold the map!</h2></map-element>
+    <static-map-element center="Paris" size="200x300" zoom="13" maptype="roadmap"><h2>Static one</h2></static-map-element>
+    </div>
 </body>
 
 </html>

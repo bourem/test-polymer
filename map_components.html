@@ -1,13 +1,15 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/iron-jsonp-library/iron-jsonp-library.html">
+
+
 <dom-module id="map-element">
+    <style>
+    #map {
+        height: 100%;
+    }
+    </style>
     <template>
         <iron-jsonp-library library-url="https://maps.googleapis.com/maps/api/js?callback=%%callback%%" notify-event="api-load" library-loaded="{{loaded}}"></iron-jsonp-library>
-        <style>
-        #map {
-            height: 100%;
-        }
-        </style>
         <div id="map"></div>
     </template>
 </dom-module>
@@ -34,4 +36,21 @@ Polymer({
             options);
     }
 });
+</script>
+
+<dom-module id="static-map-element">
+    <div>
+    <img src="https://maps.googleapis.com/maps/api/staticmap?zoom={{zoom}}&size={{size}}&maptype={{maptype}}&center={{center}}">
+    </div>
+</dom-module>
+<script>
+Polymer({
+    is: "static-map-element",
+    properties: {
+        zoom:{type: int},
+        size:{type: String},
+        maptype:{type: String},
+        center:{type: String}
+    }
+})
 </script>
