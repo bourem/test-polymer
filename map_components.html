@@ -27,9 +27,9 @@
 
 <dom-module id="map-controller">
     <template>
-        <map-element maplocation='{{maplocation}}'></map-element>
-        <static-map center="{{staticcenter}}" size="200x300" zoom="13" maptype="roadmap"></static-map>
-        <button id="synchroButton">click</button>
+        <map-element maplocation='{{mapcenter}}' mapzoom="{{mapzoom}}"></map-element>
+        <static-map center="{{staticcenter}}" size="400x400" zoom="{{staticzoom}}" maptype="roadmap"></static-map>
+        <button on-tap="syncroMaps">click</button>
     </template>
 </dom-module>
 
@@ -40,6 +40,11 @@ Polymer({
         maplocation: {
             type: Object,
             notify: true
+        },
+        mapzoom: {
+            type: Number,
+            notify: true,
+            value: 13
         }
     },
     listeners: {
@@ -49,7 +54,7 @@ Polymer({
     },
     initMap: function() {
         var options = {
-            zoom: 17,
+            zoom: this.mapzoom,
             center: new google.maps.LatLng(this.maplocation)
         };
         var map = new google.maps.Map(
@@ -58,6 +63,10 @@ Polymer({
         map.addListener('center_changed', function(this_){
             return function(){
             this_.maplocation = map.getCenter().toJSON();
+        }}(this));
+        map.addListener('zoom_changed', function(this_){
+            return function(){
+            this_.mapzoom = map.getZoom();
         }}(this));
     }
 });
@@ -68,6 +77,10 @@ Polymer({
         center:{
             type: String,
             notify: true
+        },
+        zoom:{
+            type: Number,
+            notify: true
         }
     }
 });
@@ -75,16 +88,21 @@ Polymer({
 Polymer({
     is: "map-controller",
     properties:{
-        maplocation: {
+        mapcenter: {
             type: Object
+        },
+        mapzoom: {
+            type: Number,
+            value: 13
         }
     },
-    listeners:{
-        'synchroButton.tap': 'syncroMaps'
-    },
     syncroMaps: function(e){
-        this.staticcenter = this.maplocation.lat+","+this.maplocation.lng;
+        this.staticcenter = this.mapcenter.lat+","+this.mapcenter.lng;
+        this.staticzoom = this.mapzoom;
+    },
+    ready: function(){
+        this.staticcenter = this.mapcenter.lat+","+this.mapcenter.lng;
+        this.staticzoom = this.mapzoom;
     }
 });
 </script>
-
