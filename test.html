@@ -5,21 +5,22 @@
     <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="map_components.html">
     <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+    <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
     <style>
-    html,
-    body {
+    html, body {
         height: 100%;
         margin: 0;
         padding: 0;
+    }
+    #container {
+        height:100%;
     }
     </style>
 </head>
 
 <body>
-    <div class="layout horizontal">
-    <map-element location='{ "lat": 35.41, "lng": 139.41}'><h2>Behold the map!</h2></map-element>
-    <static-map-element center="Paris" size="200x300" zoom="13" maptype="roadmap"><h2>Static one</h2></static-map-element>
-    </div>
+    <map-controller id="container" class="layout horizontal" staticcenter="Paris" maplocation='{ "lat": 35.41, "lng": 139.41}'>controller</map-controller>
 </body>
 
 </html>

@@ -4,8 +4,13 @@
 
 <dom-module id="map-element">
     <style>
+    :host {
+        height:auto;
+        width:100%;
+    }
     #map {
         height: 100%;
+        width: 100%;
     }
     </style>
     <template>
@@ -13,12 +18,28 @@
         <div id="map"></div>
     </template>
 </dom-module>
+
+<dom-module id="static-map">
+    <template>
+    <img src="https://maps.googleapis.com/maps/api/staticmap?zoom={{zoom}}&size={{size}}&maptype={{maptype}}&center={{center}}">
+    </template>
+</dom-module>
+
+<dom-module id="map-controller">
+    <template>
+        <map-element maplocation='{{maplocation}}'></map-element>
+        <static-map center="{{staticcenter}}" size="200x300" zoom="13" maptype="roadmap"></static-map>
+        <button id="synchroButton">click</button>
+    </template>
+</dom-module>
+
 <script>
 Polymer({
     is: "map-element",
     properties: {
-        location: {
-            type: Object
+        maplocation: {
+            type: Object,
+            notify: true
         }
     },
     listeners: {
@@ -29,28 +50,41 @@ Polymer({
     initMap: function() {
         var options = {
             zoom: 17,
-            center: new google.maps.LatLng(this.location)
+            center: new google.maps.LatLng(this.maplocation)
         };
         var map = new google.maps.Map(
             document.getElementById('map'),
             options);
+        map.addListener('center_changed', function(this_){
+            return function(){
+            this_.maplocation = map.getCenter().toJSON();
+        }}(this));
+    }
+});
+
+Polymer({
+    is: "static-map",
+    properties:{
+        center:{
+            type: String,
+            notify: true
+        }
+    }
+});
+
+Polymer({
+    is: "map-controller",
+    properties:{
+        maplocation: {
+            type: Object
+        }
+    },
+    listeners:{
+        'synchroButton.tap': 'syncroMaps'
+    },
+    syncroMaps: function(e){
+        this.staticcenter = this.maplocation.lat+","+this.maplocation.lng;
     }
 });
 </script>
 
-<dom-module id="static-map-element">
-    <div>
-    <img src="https://maps.googleapis.com/maps/api/staticmap?zoom={{zoom}}&size={{size}}&maptype={{maptype}}&center={{center}}">
-    </div>
-</dom-module>
-<script>
-Polymer({
-    is: "static-map-element",
-    properties: {
-        zoom:{type: int},
-        size:{type: String},
-        maptype:{type: String},
-        center:{type: String}
-    }
-})
-</script>
