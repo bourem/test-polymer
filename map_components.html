@@ -26,7 +26,20 @@
 </dom-module>
 
 <dom-module id="map-controller">
+    <style>
+        #dynamicmap{
+            height: 400px;
+            width: 400px;
+            position: absolute;
+            top: 97px;
+            left: 401px;
+            z-index: 100;
+            border: 2px solid black;
+            pointer-events: none;
+        }
+    </style>
     <template>
+        <div id="dynamicmap"></div>
         <map-element maplocation='{{mapcenter}}' mapzoom="{{mapzoom}}"></map-element>
         <static-map center="{{staticcenter}}" size="400x400" zoom="{{staticzoom}}" maptype="roadmap"></static-map>
         <button on-tap="syncroMaps">click</button>
@@ -89,7 +102,8 @@ Polymer({
     is: "map-controller",
     properties:{
         mapcenter: {
-            type: Object
+            type: Object,
+            value: {"lat":0,"lng":0}
         },
         mapzoom: {
             type: Number,
@@ -103,6 +117,7 @@ Polymer({
     ready: function(){
         this.staticcenter = this.mapcenter.lat+","+this.mapcenter.lng;
         this.staticzoom = this.mapzoom;
+        console.log(this.mapzoom);
     }
 });
 </script>
