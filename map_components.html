@@ -1,6 +1,7 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/iron-jsonp-library/iron-jsonp-library.html">
-
+<link rel="import" href="bower_components/carbon-route/carbon-route.html">
+<link rel="import" href="bower_components/carbon-route/carbon-location.html">
 
 <dom-module id="map-element">
     <style>
@@ -39,10 +40,18 @@
         }
     </style>
     <template>
+        <carbon-location route="{{route}}" use-hash-as-path></carbon-location>
+        <carbon-route
+            route="{{route}}"
+            pattern="/buttontext/:buttonText"
+            data="{{data}}"
+            tail="{{tail}}">
+        </carbon-route>
+
         <div id="dynamicmap"></div>
         <map-element maplocation='{{mapcenter}}' mapzoom="{{mapzoom}}"></map-element>
         <static-map center="{{staticcenter}}" size="400x400" zoom="{{staticzoom}}" maptype="roadmap"></static-map>
-        <button on-tap="syncroMaps">click</button>
+        <button on-tap="syncroMaps">{{data.buttonText}}</button>
     </template>
 </dom-module>
 
@@ -117,7 +126,13 @@ Polymer({
     ready: function(){
         this.staticcenter = this.mapcenter.lat+","+this.mapcenter.lng;
         this.staticzoom = this.mapzoom;
-        console.log(this.mapzoom);
+        console.log("route: ", this.route);
+    },
+    attached: function(){
+        var mapelement = this.querySelector("map-element");
+        var rect = this.querySelector("#dynamicmap");
+        rect.style.top = (mapelement.offsetHeight - 400)/2 + "px";
+        rect.style.left = (mapelement.offsetWidth - 400)/2 + "px";
     }
 });
 </script>
