@@ -22,18 +22,14 @@
 
 <dom-module id="static-map">
     <template>
-    <img src="https://maps.googleapis.com/maps/api/staticmap?zoom={{zoom}}&size={{size}}&maptype={{maptype}}&center={{center}}">
+    <img src="https://maps.googleapis.com/maps/api/staticmap?zoom={{zoom}}&size={{width}}x{{height}}&maptype={{maptype}}&center={{center}}" style="height:{{height}}px;width: {{width}}px;">
     </template>
 </dom-module>
 
 <dom-module id="map-controller">
     <style>
-        #dynamicmap{
-            height: 400px;
-            width: 400px;
+        #capturedzone{
             position: absolute;
-            top: 97px;
-            left: 401px;
             z-index: 100;
             border: 2px solid black;
             pointer-events: none;
@@ -48,9 +44,9 @@
             tail="{{tail}}">
         </carbon-route>
 
-        <div id="dynamicmap"></div>
+        <div id="capturedzone" style="height:{{staticsize.height}}px;width:{{staticsize.width}}px;"></div>
         <map-element maplocation='{{mapcenter}}' mapzoom="{{mapzoom}}"></map-element>
-        <static-map center="{{staticcenter}}" size="400x400" zoom="{{staticzoom}}" maptype="roadmap"></static-map>
+        <static-map center="{{staticcenter}}" height="{{staticsize.height}}" width="{{staticsize.width}}" zoom="{{staticzoom}}" maptype="roadmap"></static-map>
         <button on-tap="syncroMaps">{{data.buttonText}}</button>
     </template>
 </dom-module>
@@ -71,8 +67,6 @@ Polymer({
     },
     listeners: {
         'api-load': 'initMap',
-    },
-    ready: function() {
     },
     initMap: function() {
         var options = {
@@ -117,7 +111,12 @@ Polymer({
         mapzoom: {
             type: Number,
             value: 13
-        }
+        },
+        staticsize: {
+            type: Object,
+            value: {width: 500, height: 400}
+        },
+        data:{type:Object, value:{"buttonText":"auie"}}
     },
     syncroMaps: function(e){
         this.staticcenter = this.mapcenter.lat+","+this.mapcenter.lng;
@@ -126,13 +125,12 @@ Polymer({
     ready: function(){
         this.staticcenter = this.mapcenter.lat+","+this.mapcenter.lng;
         this.staticzoom = this.mapzoom;
-        console.log("route: ", this.route);
     },
     attached: function(){
         var mapelement = this.querySelector("map-element");
-        var rect = this.querySelector("#dynamicmap");
-        rect.style.top = (mapelement.offsetHeight - 400)/2 + "px";
-        rect.style.left = (mapelement.offsetWidth - 400)/2 + "px";
+        var rect = this.querySelector("#capturedzone");
+        rect.style.top = (mapelement.offsetHeight - this.staticsize.height)/2 + "px";
+        rect.style.left = (mapelement.offsetWidth - this.staticsize.width)/2 + "px";
     }
 });
 </script>
