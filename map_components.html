@@ -99,6 +99,9 @@ Polymer({
 
 Polymer({
     is: "static-map",
+    ready: function(){
+        var img = this.querySelector("img");
+        if(!this.params.width||!this.params.height){img.alt="Bad Static Maps request - bad size parameter: '" + this.params.width + "x" + this.params.height + "'";}
     }
 });
 
